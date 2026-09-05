@@ -71,7 +71,7 @@ class GPUMatVecPool:
                 self._p_dev.append(cp.empty(self.ndof, dtype=cp.float64))
 
         if verbose:
-            print(f"[BlenderFEA] GPUMatVecPool: {len(chunks)} CUDA devices "
+            print(f"[VoxelSim FEA] GPUMatVecPool: {len(chunks)} CUDA devices "
                   f"{self.device_ids} over {nelem} elements ({self.ndof} DOF) "
                   f"-- host-staged transfers (no P2P)")
 

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Sidebar UI for BlenderFEA (View3D > N panel) + an on-screen color-scale
+"""Sidebar UI for VoxelSim FEA (View3D > N panel) + an on-screen color-scale
 legend drawn directly into the 3D viewport.
 
 The legend is a small gradient bar + two value labels, drawn with the
@@ -32,12 +32,12 @@ from .core.extract import _jet_rgb
 class FEA_PT_base:
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = "BlenderFEA"
+    bl_category = "VoxelSim FEA"
 
 
 class FEA_PT_main(FEA_PT_base, Panel):
     bl_idname = "FEA_PT_main"
-    bl_label = "BlenderFEA"
+    bl_label = "VoxelSim FEA"
 
     def draw(self, context):
         layout = self.layout

@@ -164,7 +164,7 @@ class CPUMatVecPool:
             self._procs.append(proc)
 
         if verbose:
-            print(f"[BlenderFEA] CPUMatVecPool: {self.n_workers} worker "
+            print(f"[VoxelSim FEA] CPUMatVecPool: {self.n_workers} worker "
                   f"processes over {nelem} elements ({self.ndof} DOF)")
 
     def _run(self, op):

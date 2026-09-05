@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """
-BlenderFEA - Linear FEA (real material values) for solid mesh parts.
+VoxelSim FEA - Linear FEA (real material values) for solid mesh parts.
 
 Voxelize a part, solve one linear-elastic load case with a matrix-free
 conjugate-gradient FEA solver, and color the part's own surface -- plus an

@@ -5,7 +5,7 @@ Preferred path: voxelization + the linear FEA solve run in a plain-Python
 subprocess (see core.solve_worker) so Blender's main thread does the bare
 minimum and the viewport stays interactive; the modal timer just polls it and
 applies the finished result (four dedicated result objects) into the
-"BlenderFEA Results" collection.
+"VoxelSim FEA Results" collection.
 
 Fallback (no subprocess available): voxelization runs as a chunked in-process
 generator so that phase doesn't freeze the UI. The solve itself is a single
@@ -22,10 +22,10 @@ solver works in SI Pascals; the *1e9 / *1e6 conversions happen once, at the
 two places a job is handed to the solver (_build_job for the subprocess path,
 _run_inprocess_solve for the fallback).
 
-Results: every solve builds/updates FOUR objects in the "BlenderFEA Results"
-collection -- BlenderFEA_Result_Stress, BlenderFEA_Result_Displacement,
-BlenderFEA_Result_Safety (each an independent copy of the part's mesh, see
-core.extract.duplicate_result_object) and BlenderFEA_StressCloud (the voxel
+Results: every solve builds/updates FOUR objects in the "VoxelSim FEA Results"
+collection -- VoxelSimFEA_Result_Stress, VoxelSimFEA_Result_Displacement,
+VoxelSimFEA_Result_Safety (each an independent copy of the part's mesh, see
+core.extract.duplicate_result_object) and VoxelSimFEA_StressCloud (the voxel
 cross-section). FEA_Settings.result_view picks which ONE is visible at a
 time; switching it (properties.py's update callback -> apply_result_visibility
 below) is instant and never re-solves, since all four already exist.
@@ -46,11 +46,11 @@ from .core import voxelize, extract, solve_worker, materials
 from .core import fea as fea_core
 from .core.fea import VoxelFEA, build_edof
 
-RESULTS_COLLECTION = "BlenderFEA Results"
-RESULT_STRESS_NAME = "BlenderFEA_Result_Stress"
-RESULT_DISPLACEMENT_NAME = "BlenderFEA_Result_Displacement"
-RESULT_SAFETY_NAME = "BlenderFEA_Result_Safety"
-STRESS_CLOUD_NAME = "BlenderFEA_StressCloud"
+RESULTS_COLLECTION = "VoxelSim FEA Results"
+RESULT_STRESS_NAME = "VoxelSimFEA_Result_Stress"
+RESULT_DISPLACEMENT_NAME = "VoxelSimFEA_Result_Displacement"
+RESULT_SAFETY_NAME = "VoxelSimFEA_Result_Safety"
+STRESS_CLOUD_NAME = "VoxelSimFEA_StressCloud"
 
 _RESULT_OBJECT_NAMES = {
     'STRESS': RESULT_STRESS_NAME,
@@ -200,7 +200,7 @@ def _rebuild_result_objects(context, payload, coll):
             payload["vsize"], payload["stress_vmax"], 0.0,
             active3d=payload["active3d"], bands=bands)
     except Exception as exc:  # noqa: BLE001
-        print(f"[BlenderFEA] stress result build failed: {exc}")
+        print(f"[VoxelSim FEA] stress result build failed: {exc}")
         traceback.print_exc()
 
     try:
@@ -212,7 +212,7 @@ def _rebuild_result_objects(context, payload, coll):
             payload["vsize"], payload["displacement_vmax_m"], 0.0,
             bands=bands)
     except Exception as exc:  # noqa: BLE001
-        print(f"[BlenderFEA] displacement result build failed: {exc}")
+        print(f"[VoxelSim FEA] displacement result build failed: {exc}")
         traceback.print_exc()
 
     try:
@@ -227,7 +227,7 @@ def _rebuild_result_objects(context, payload, coll):
             payload["vsize"], 0.0, -cap,
             active3d=payload["active3d"], bands=bands)
     except Exception as exc:  # noqa: BLE001
-        print(f"[BlenderFEA] safety result build failed: {exc}")
+        print(f"[VoxelSim FEA] safety result build failed: {exc}")
         traceback.print_exc()
 
     try:
@@ -238,7 +238,7 @@ def _rebuild_result_objects(context, payload, coll):
         extract.ensure_stress_cloud_geonodes(
             cloud, collection=coll, enable_clip=True)
     except Exception as exc:  # noqa: BLE001
-        print(f"[BlenderFEA] cross-section result build failed: {exc}")
+        print(f"[VoxelSim FEA] cross-section result build failed: {exc}")
 
     apply_result_visibility(context, s)
 
@@ -442,7 +442,7 @@ class FEA_OT_run(Operator):
                 s.status = f"voxelizing (res {s.resolution})... [bg]"
                 return
             except Exception as exc:  # noqa: BLE001 - degrade, don't fail
-                print(f"[BlenderFEA] subprocess solver unavailable, using "
+                print(f"[VoxelSim FEA] subprocess solver unavailable, using "
                       f"in-process path: {exc}")
                 self._mode = 'inproc'
                 self._solver = None
@@ -454,7 +454,7 @@ class FEA_OT_run(Operator):
                 vx.start(s, self._depsgraph)
                 self._voxizer = vx
             except Exception as exc:  # noqa: BLE001
-                print(f"[BlenderFEA] async voxelize unavailable: {exc}")
+                print(f"[VoxelSim FEA] async voxelize unavailable: {exc}")
                 self._voxizer = None
         if self._voxizer is None:
             self._voxgen = voxelize.build_grid_steps(s, self._depsgraph)

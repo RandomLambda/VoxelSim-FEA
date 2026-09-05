@@ -196,7 +196,7 @@ class MGSolver:
                 return
             except Exception as exc:
                 if self.verbose:
-                    print(f"[BlenderFEA] MG: multi-CPU pool unavailable "
+                    print(f"[VoxelSim FEA] MG: multi-CPU pool unavailable "
                           f"({exc}); using single-process CPU")
                 self.plan = compute_plan.ComputePlan(
                     "cpu", np, 1, "CPU (multi-CPU fallback)")
@@ -227,7 +227,7 @@ class MGSolver:
                 return
             except Exception as exc:
                 if self.verbose:
-                    print(f"[BlenderFEA] MG: domain-decomposed multi-GPU pool "
+                    print(f"[VoxelSim FEA] MG: domain-decomposed multi-GPU pool "
                           f"unavailable ({exc}); trying plain multi-GPU pool")
             from . import parallel_gpu
             try:
@@ -237,7 +237,7 @@ class MGSolver:
                 return
             except Exception as exc:
                 if self.verbose:
-                    print(f"[BlenderFEA] MG: multi-GPU pool unavailable "
+                    print(f"[VoxelSim FEA] MG: multi-GPU pool unavailable "
                           f"({exc}); using single GPU/CPU")
                 self.plan = compute_plan.choose(
                     lv0['ndof'], mode="GPU", verbose=self.verbose)
@@ -557,7 +557,7 @@ class MGSolver:
             # operator. Always printed (not gated on verbose): this is a
             # correctness signal, and the returned `u` is being used by the
             # caller regardless, converged or not.
-            print(f"[BlenderFEA] WARNING: MG-PCG did not converge in "
+            print(f"[VoxelSim FEA] WARNING: MG-PCG did not converge in "
                   f"{max_cg} iterations (tol={tol:g}, final residual ratio="
                   f"{self.last_resid_ratio:.3e}, plan="
                   f"{self.plan.label if self.plan is not None else 'pinned xp'}"
@@ -571,7 +571,7 @@ class MGSolver:
             t_other = t_total - self._t_pooled - self._t_local
             pool_label = (self._pool.__class__.__name__
                           if self._pool is not None else "none (local only)")
-            print(f"[BlenderFEA] MG solve: {self.last_iters} CG iters "
+            print(f"[VoxelSim FEA] MG solve: {self.last_iters} CG iters "
                   f"(converged={self.last_converged}), "
                   f"total={t_total * 1e3:.1f}ms | "
                   f"pooled={self._t_pooled * 1e3:.1f}ms "

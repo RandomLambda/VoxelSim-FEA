@@ -276,14 +276,14 @@ class FEA_Settings(PropertyGroup):
              "stress (blue/green = safe, red = at or below yield). "
              "Requires Yield Strength > 0"),
             ('CROSS_SECTION', "Cross-Section (3D)",
-             "BlenderFEA_StressCloud: one real, colored cube per active "
+             "VoxelSimFEA_StressCloud: one real, colored cube per active "
              "voxel (von Mises stress), near-zero elements dropped, with a "
-             "Geometry Nodes clip plane (BlenderFEA_ClipPlane Empty) so you "
+             "Geometry Nodes clip plane (VoxelSimFEA_ClipPlane Empty) so you "
              "can slice into the part"),
         ],
         description="Which single result object is visible right now -- "
                     "every result from the last solve stays available in "
-                    "the 'BlenderFEA Results' collection, this just switches "
+                    "the 'VoxelSim FEA Results' collection, this just switches "
                     "which one is shown (and drives the on-screen legend)",
     )
     color_mode: EnumProperty(

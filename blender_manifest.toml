@@ -1,12 +1,12 @@
 schema_version = "1.0.0"
 
 id = "blendfea"
-version = "2.5.5"
-name = "BlenderFEA - Linear FEA"
+version = "2.5.6"
+name = "VoxelSim FEA - Linear FEA"
 tagline = "Real linear-elastic FEA with steel/aluminum/plastic presets"
 maintainer = "Philip Gruenenfelder"
 type = "add-on"
-website = "https://github.com/RandomLambda/BlenderFEA"
+website = "https://github.com/RandomLambda/VoxelSim-FEA"
 
 tags = ["Mesh", "Physics"]
 

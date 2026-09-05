@@ -269,8 +269,8 @@ def field_face_colors(field3d, origin, vsize, face_points, vmax, vmin=0.0,
 # Baking colors onto an existing Blender mesh (the part itself)
 # ---------------------------------------------------------------------------
 
-_RESULT_ATTR = "BlenderFEAResult"
-_RESULT_MAT = "BlenderFEA_ResultPreview"
+_RESULT_ATTR = "VoxelSimFEAResult"
+_RESULT_MAT = "VoxelSimFEA_ResultPreview"
 
 
 def _ensure_result_material():
@@ -297,8 +297,8 @@ def _ensure_result_material():
     return mat
 
 
-_CONTOUR_ATTR = "BlenderFEAResultT"
-_CONTOUR_MAT = "BlenderFEA_ResultPreview_Contour"
+_CONTOUR_ATTR = "VoxelSimFEAResultT"
+_CONTOUR_MAT = "VoxelSimFEA_ResultPreview_Contour"
 
 
 def _ensure_contour_material(bands):
@@ -597,7 +597,7 @@ def _triangulate_ngons(mesh):
             mesh.update()
         bm.free()
     except Exception as exc:  # noqa: BLE001
-        print(f"[BlenderFEA] ngon triangulation skipped: {exc}")
+        print(f"[VoxelSim FEA] ngon triangulation skipped: {exc}")
 
 
 def _ensure_surface_resolution(mesh, target_edge_len):
@@ -655,7 +655,7 @@ def _ensure_surface_resolution(mesh, target_edge_len):
                 capped = True
                 break
         if capped:
-            print(f"[BlenderFEA] result-preview subdivision hit its "
+            print(f"[VoxelSim FEA] result-preview subdivision hit its "
                  f"{_SUBDIV_MAX_VERTS}-vertex cap before reaching the full "
                  f"voxel resolution (target edge length "
                  f"{target_edge_len:.6g}) -- surface preview is coarser "
@@ -664,7 +664,7 @@ def _ensure_surface_resolution(mesh, target_edge_len):
         bm.free()
         mesh.update()
     except Exception as exc:  # noqa: BLE001
-        print(f"[BlenderFEA] surface subdivision for result preview skipped: {exc}")
+        print(f"[VoxelSim FEA] surface subdivision for result preview skipped: {exc}")
 
 
 def duplicate_result_object(part_obj, name, collection=None, vsize=None,
@@ -865,7 +865,7 @@ def _pick_sample_space(obj, verts_local, verts_world, field3d, origin, vsize):
         chosen, chosen_name, frac = verts_world, "world", world_overlap
 
     if frac < 0.5:
-        print(f"[BlenderFEA] WARNING: '{obj.name}' result-mesh vertices "
+        print(f"[VoxelSim FEA] WARNING: '{obj.name}' result-mesh vertices "
              f"don't line up well with the solved field's own bounding box "
              f"even after checking both local and world coordinates "
              f"(best overlap: {chosen_name}-space, {frac:.0%}) -- the "
@@ -966,7 +966,7 @@ def _bisect_to_voxel_grid(obj, origin, vsize, dims, matrix,
             bmesh.ops.transform(bm, matrix=matrix.inverted(), verts=bm.verts)
 
         if capped:
-            print(f"[BlenderFEA] voxel-grid surface slicing for '{obj.name}' "
+            print(f"[VoxelSim FEA] voxel-grid surface slicing for '{obj.name}' "
                  f"hit its {max_faces}-face cap before every grid plane was "
                  f"cut -- some faces may still straddle a voxel-cell "
                  f"boundary (coarser-than-intended color detail for this "
@@ -975,7 +975,7 @@ def _bisect_to_voxel_grid(obj, origin, vsize, dims, matrix,
         bm.free()
         me.update()
     except Exception as exc:  # noqa: BLE001
-        print(f"[BlenderFEA] voxel-grid surface slicing skipped for "
+        print(f"[VoxelSim FEA] voxel-grid surface slicing skipped for "
              f"'{obj.name}': {exc}")
 
 
@@ -1005,9 +1005,9 @@ def clear_result_colors(obj):
 # here is the clip itself, driven by a movable Empty.
 # ---------------------------------------------------------------------------
 
-_CLIP_GROUP = "BlenderFEA_VoxelClip"
-_CLIP_EMPTY = "BlenderFEA_ClipPlane"
-_CLIP_MODIFIER = "BlenderFEA_VoxelClip"
+_CLIP_GROUP = "VoxelSimFEA_VoxelClip"
+_CLIP_EMPTY = "VoxelSimFEA_ClipPlane"
+_CLIP_MODIFIER = "VoxelSimFEA_VoxelClip"
 
 _CUBE_LOCAL_VERTS = np.array([
     [-0.5, -0.5, -0.5], [0.5, -0.5, -0.5], [0.5, 0.5, -0.5], [-0.5, 0.5, -0.5],
@@ -1237,7 +1237,7 @@ def _ensure_clip_empty(collection=None):
 
 def ensure_stress_cloud_geonodes(obj, collection=None, enable_clip=None):
     """Attach (or refresh) the voxel-clip modifier: once 'Enable Clip' is on,
-    it deletes every cube face on one side of the BlenderFEA_ClipPlane Empty.
+    it deletes every cube face on one side of the VoxelSimFEA_ClipPlane Empty.
 
     enable_clip : None leaves the modifier's current toggle alone; True/False
     forces it - used to flip the cross-section on automatically once a solve
@@ -1267,4 +1267,4 @@ def ensure_stress_cloud_geonodes(obj, collection=None, enable_clip=None):
             elif is_new:
                 mod[ids["Enable Clip"]] = False   # off by default - opt in
     except Exception as exc:  # noqa: BLE001
-        print(f"[BlenderFEA] voxel clip setup skipped: {exc}")
+        print(f"[VoxelSim FEA] voxel clip setup skipped: {exc}")

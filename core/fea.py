@@ -319,7 +319,7 @@ class VoxelFEA:
                 return
             except Exception as exc:
                 if self.verbose:
-                    print(f"[BlenderFEA] multi-CPU pool unavailable ({exc}); "
+                    print(f"[VoxelSim FEA] multi-CPU pool unavailable ({exc}); "
                           f"falling back to single-process CPU")
                 self.plan = compute_plan.ComputePlan(
                     "cpu", np, 1, "CPU (multi-CPU fallback)")
@@ -333,7 +333,7 @@ class VoxelFEA:
                 return
             except Exception as exc:
                 if self.verbose:
-                    print(f"[BlenderFEA] multi-GPU pool unavailable ({exc}); "
+                    print(f"[VoxelSim FEA] multi-GPU pool unavailable ({exc}); "
                           f"falling back to single GPU/CPU")
                 self.plan = compute_plan.choose(
                     self.ndof, mode="GPU", verbose=self.verbose)
@@ -447,11 +447,11 @@ class VoxelFEA:
                     cpu_threads=self._cpu_threads, verbose=self.verbose)
             except Exception as exc:
                 import traceback
-                print(f"[BlenderFEA] MGSolver construction failed for "
+                print(f"[VoxelSim FEA] MGSolver construction failed for "
                       f"{self.nx}x{self.ny}x{self.nz} "
                       f"(mode={self._compute_mode}): {exc}\n"
                       f"{traceback.format_exc()}"
-                      f"[BlenderFEA] Falling back to plain Jacobi-PCG (no "
+                      f"[VoxelSim FEA] Falling back to plain Jacobi-PCG (no "
                       f"multigrid preconditioning) for this solve.")
                 self.use_multigrid = False
                 self._mg = None
@@ -475,10 +475,10 @@ class VoxelFEA:
                                     progress_cb=progress_cb)
         except Exception as exc:
             import traceback
-            print(f"[BlenderFEA] MGSolver.solve() failed for "
+            print(f"[VoxelSim FEA] MGSolver.solve() failed for "
                   f"{self.nx}x{self.ny}x{self.nz}: {exc}\n"
                   f"{traceback.format_exc()}"
-                  f"[BlenderFEA] Falling back to plain Jacobi-PCG (no "
+                  f"[VoxelSim FEA] Falling back to plain Jacobi-PCG (no "
                   f"multigrid preconditioning) for this solve.")
             self.use_multigrid = False
             try:
@@ -580,7 +580,7 @@ class VoxelFEA:
             rz = rz_new
 
         if not self.last_converged:
-            print(f"[BlenderFEA] WARNING: CG did not converge in {max_cg} "
+            print(f"[VoxelSim FEA] WARNING: CG did not converge in {max_cg} "
                   f"iterations (tol={tol:g}, final residual ratio="
                   f"{self.last_resid_ratio:.3e}). Returned displacement may "
                   f"be inaccurate - if this keeps appearing, it explains "

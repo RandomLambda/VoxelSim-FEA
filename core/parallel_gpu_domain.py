@@ -344,7 +344,7 @@ class DomainGPUMatVecPool:
         if verbose:
             sizes = ", ".join(str(h - l) for l, h in
                                zip(self._dof_lo, self._dof_hi))
-            print(f"[BlenderFEA] DomainGPUMatVecPool: {self.n_devices} CUDA "
+            print(f"[VoxelSim FEA] DomainGPUMatVecPool: {self.n_devices} CUDA "
                   f"devices, z-slabs {slabs}, local DOF sizes [{sizes}] "
                   f"(full ndof={self.ndof}) -- total transfer per apply() "
                   f"is O(ndof) once, not O(n_devices*ndof)")

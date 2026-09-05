@@ -104,7 +104,7 @@ def configure_cpu_threads(n_threads, verbose=False):
         import threadpoolctl
     except Exception as exc:
         if verbose:
-            print(f"[BlenderFEA] threadpoolctl unavailable ({exc}); "
+            print(f"[VoxelSim FEA] threadpoolctl unavailable ({exc}); "
                   f"leaving BLAS thread count at its default")
         return None
     try:
@@ -116,12 +116,12 @@ def configure_cpu_threads(n_threads, verbose=False):
         if verbose:
             info = threadpoolctl.threadpool_info()
             libs = ", ".join(sorted({d.get("internal_api", "?") for d in info})) or "none detected"
-            print(f"[BlenderFEA] BLAS thread pool set to {n_threads} "
+            print(f"[VoxelSim FEA] BLAS thread pool set to {n_threads} "
                   f"(libraries: {libs})")
         return limiter
     except Exception as exc:
         if verbose:
-            print(f"[BlenderFEA] could not set BLAS thread count ({exc})")
+            print(f"[VoxelSim FEA] could not set BLAS thread count ({exc})")
         return None
 
 
@@ -188,7 +188,7 @@ def choose(ndof, mode="AUTO", cpu_threads=0, verbose=False):
     configure_cpu_threads(main_process_threads, verbose=verbose)
 
     if verbose:
-        print(f"[BlenderFEA] compute plan: ndof={ndof} mode={mode} -> "
+        print(f"[VoxelSim FEA] compute plan: ndof={ndof} mode={mode} -> "
               f"{plan.label} (gpu_build={gpu_build}, gpu_ok={gpu_ok}, "
               f"n_gpus={n_gpus}, cpu_workers={n_workers_cpu})")
     return plan
